@@ -6,6 +6,7 @@
 
 int _tmain(int argc, _TCHAR* argv[])
 {
+	cout << "Hello wordl";
 	return 0;
 }
 
