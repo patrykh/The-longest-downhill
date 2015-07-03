@@ -11,6 +11,44 @@
 
 using namespace std;
 
+struct stos
+{
+	stos * poprzedni;
+	int dana;
+};
+
+void dodaj(stos ** root, int dana)
+{
+	stos * S = new stos;
+
+	S->dana = dana;
+	S->poprzedni = *root;
+	*root = S;
+}
+
+void wyswietl(stos *root)
+{
+	stos * tmp = root;
+	while (true){
+
+		cout << tmp->dana << "\n";
+		tmp = tmp->poprzedni;
+		if (tmp->poprzedni == NULL){
+			break;
+		}
+	}
+}
+
+void usun(stos **root)
+{
+	if (*root){
+		stos * tmp = *root;
+		*root = (*root)->poprzedni;
+		cout << tmp->dana << endl;
+		delete tmp;
+	}
+}
+
 int main()
 {
 	int ilosc_wierzcholkow = 0,
