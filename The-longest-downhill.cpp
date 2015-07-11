@@ -95,7 +95,7 @@ int main()
 	// Dane wejœciowe
 	for (i = 0; i < ilosc_wierzcholkow; i++){
 		cin >> ilosc_sasiadow;
-		for (int j = 0; j < ilosc_sasiadow; j++){
+		for (j = 0; j < ilosc_sasiadow; j++){
 			cin >> sasiad >> waga;
 			pw = new element_listy;
 			pw->v = sasiad;
@@ -149,7 +149,7 @@ int main()
 		// Œcie¿kê przechodzimy od koñca ku pocz¹tkowi,
 		// Zapisuj¹c na stosie kolejne wierzcho³ki
 
-		for (int j = i; j > -1; j = p[j]) S[sptr++] = j;
+		for (j = i; j > -1; j = p[j]) S[sptr++] = j;
 
 		// Wyœwietlamy œcie¿kê, pobieraj¹c wierzcho³ki ze stosu
 
@@ -179,39 +179,6 @@ int main()
 	}
 
 	delete[] graf;
-
-	////Tworzenie macierzy
-	//int ** A = new int*[ilosc_wierzcholkow];
-	//for (i = 0; i < ilosc_wierzcholkow; i++){
-	//	A[i] = new int[ilosc_wierzcholkow];
-	//}
-	////wypisywanie zerami
-	//for (i = 0; i < ilosc_wierzcholkow; i++){
-	//	for (int j = 0; j < ilosc_wierzcholkow; j++){
-	//		A[i][j] = 0;
-	//	}
-	//}
-	//for (int m = 0; m < ilosc_wierzcholkow; m++){
-	//	cin >> ilosc_sasiadow;
-	//	for (int n = 0; n < ilosc_sasiadow; n++){
-	//		cin >> sasiad >> waga;
-	//		A[m][sasiad] = waga;
-	//	}
-	//}
-	////wyœwietlanie macierzy
-	//cout << "-   ";
-	//for (i = 0; i < ilosc_wierzcholkow; i++) cout << i << " ";
-	//cout << endl << endl;
-	//for (i = 0; i < ilosc_wierzcholkow; i++){
-	//	cout << i << "   ";
-	//	for (int j = 0; j < ilosc_wierzcholkow; j++){
-	//		cout << A[i][j] << " ";
-	//	}
-	//	cout << "\n";
-	//}
-	////Czyszczenie pamiêci
-	//for (i = 0; i < ilosc_wierzcholkow; i++) delete[] A[i];
-	//delete[] A;
 
 	return 0;
 }
