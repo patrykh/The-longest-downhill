@@ -57,13 +57,17 @@ struct element_listy
 
 int main()
 {
-	const int MININT = -2147483647;
+	const int MININT = 2147483647;
 	int ilosc_wierzcholkow = 0,
 		start = 0,
 		ilosc_sasiadow = 0,
 		sasiad = 0,
 		waga = 0,
 		sptr = 0,
+		j = 0,
+		u = 0,
+		v = 0,
+		i = 0,
 		*d,
 		*p,
 		*S;
@@ -81,7 +85,7 @@ int main()
 	S = new int[ilosc_wierzcholkow];
 	
 	//Inicjacja tablic dynamicznych
-	for (int i = 0; i < ilosc_wierzcholkow; i++){
+	for (i = 0; i < ilosc_wierzcholkow; i++){
 		d[i] = MININT;
 		p[i] = -1;
 		QS[i] = false;
@@ -89,7 +93,7 @@ int main()
 	}
 
 	// Dane wejœciowe
-	for (int i = 0; i < ilosc_wierzcholkow; i++){
+	for (i = 0; i < ilosc_wierzcholkow; i++){
 		cin >> ilosc_sasiadow;
 		for (int j = 0; j < ilosc_sasiadow; j++){
 			cin >> sasiad >> waga;
@@ -101,27 +105,88 @@ int main()
 		}
 	}
 	
-	//wyswietlanie
-	for (int i = 0; i < ilosc_wierzcholkow; ++i){
-		pw = graf[i];
-		cout << i << ' ';
-		while (pw){
-			cout << pw->v;
-			cout << ' ';
-			cout << pw->w;
-			pw = pw->next;
-			cout << ' ';
+	////wyswietlanie - OK!
+	//for (i = 0; i < ilosc_wierzcholkow; ++i){
+	//	pw = graf[i];
+	//	cout << i << ' ';
+	//	while (pw){
+	//		cout << pw->v;
+	//		cout << ' ';
+	//		cout << pw->w;
+	//		pw = pw->next;
+	//		cout << ' ';
+	//	}
+	//	cout << endl;
+	//}
+
+	d[v] = 0;
+
+	for (i = 0; i < ilosc_wierzcholkow; i++){
+		// Szukamy wierzcho³ka w Q o najmniejszym koszcie d
+		for (j = 0; QS[j]; j++);
+		for (u = j++; j < ilosc_wierzcholkow; j++){
+			if (!QS[j] && (d[j] < d[u])) u = j;
 		}
-		cout << endl;
+
+		// Znaleziony wierzcho³ek przenosimy do S
+		QS[u] = true;
+
+		// Modyfikujemy odpowiednio wszystkich s¹siadów u, którzy s¹ w Q
+		for (pw = graf[u]; pw; pw = pw->next){
+			if (!QS[pw->v] && (d[pw->v] > d[u] + pw->w)){ // Druga opcja to porównanie wag
+				d[pw->v] = d[u] + pw->v;
+				p[pw->v] = u;
+			}
+		}
 	}
+
+	// Gotowe, wyœwietlamy wyniki
+
+	for (i = 0; i < ilosc_wierzcholkow; i++)
+	{
+		cout << i << ": ";
+
+		// Œcie¿kê przechodzimy od koñca ku pocz¹tkowi,
+		// Zapisuj¹c na stosie kolejne wierzcho³ki
+
+		for (int j = i; j > -1; j = p[j]) S[sptr++] = j;
+
+		// Wyœwietlamy œcie¿kê, pobieraj¹c wierzcho³ki ze stosu
+
+		while (sptr) cout << S[--sptr] << " ";
+
+		// Na koñcu œcie¿ki wypisujemy jej koszt
+
+		cout << "$" << d[i] << endl;
+	}
+
+	// Usuwamy tablice dynamiczne
+
+	delete[] d;
+	delete[] p;
+	delete[] QS;
+	delete[] S;
+
+	for (i = 0; i < ilosc_wierzcholkow; i++)
+	{
+		pw = graf[i];
+		while (pw)
+		{
+			rw = pw;
+			pw = pw->next;
+			delete rw;
+		}
+	}
+
+	delete[] graf;
 
 	////Tworzenie macierzy
 	//int ** A = new int*[ilosc_wierzcholkow];
-	//for (int i = 0; i < ilosc_wierzcholkow; i++){
+	//for (i = 0; i < ilosc_wierzcholkow; i++){
 	//	A[i] = new int[ilosc_wierzcholkow];
 	//}
 	////wypisywanie zerami
-	//for (int i = 0; i < ilosc_wierzcholkow; i++){
+	//for (i = 0; i < ilosc_wierzcholkow; i++){
 	//	for (int j = 0; j < ilosc_wierzcholkow; j++){
 	//		A[i][j] = 0;
 	//	}
@@ -135,9 +200,9 @@ int main()
 	//}
 	////wyœwietlanie macierzy
 	//cout << "-   ";
-	//for (int i = 0; i < ilosc_wierzcholkow; i++) cout << i << " ";
+	//for (i = 0; i < ilosc_wierzcholkow; i++) cout << i << " ";
 	//cout << endl << endl;
-	//for (int i = 0; i < ilosc_wierzcholkow; i++){
+	//for (i = 0; i < ilosc_wierzcholkow; i++){
 	//	cout << i << "   ";
 	//	for (int j = 0; j < ilosc_wierzcholkow; j++){
 	//		cout << A[i][j] << " ";
@@ -145,7 +210,7 @@ int main()
 	//	cout << "\n";
 	//}
 	////Czyszczenie pamiêci
-	//for (int i = 0; i < ilosc_wierzcholkow; i++) delete[] A[i];
+	//for (i = 0; i < ilosc_wierzcholkow; i++) delete[] A[i];
 	//delete[] A;
 
 	return 0;
