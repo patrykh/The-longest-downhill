@@ -1,0 +1,11 @@
+*.h
+Debug/The-long.CCE67731.tlog/link.command.1.tlog
+*.tlog
+Debug/stdafx.obj
+*.obj
+stdafx.cpp
+*.pdb
+Debug/The-longest-downhill.log
+*.filters
+The-longest-downhill.vcxproj
+*.idb
