@@ -57,7 +57,7 @@ struct element_listy
 
 int main()
 {
-	const int MININT = 2147483647;
+	const int MININT = -2147483647;
 	int ilosc_wierzcholkow = 0,
 		start = 0,
 		ilosc_sasiadow = 0,
@@ -66,7 +66,6 @@ int main()
 		sptr = 0,
 		j = 0,
 		u = 0,
-		v = 0,
 		i = 0,
 		*d,
 		*p,
@@ -119,13 +118,13 @@ int main()
 	//	cout << endl;
 	//}
 
-	d[v] = 0;
+	d[start] = 0;
 
 	for (i = 0; i < ilosc_wierzcholkow; i++){
 		// Szukamy wierzcho³ka w Q o najmniejszym koszcie d
 		for (j = 0; QS[j]; j++);
 		for (u = j++; j < ilosc_wierzcholkow; j++){
-			if (!QS[j] && (d[j] < d[u])) u = j;
+			if (!QS[j] && (d[j] > d[u])) u = j;
 		}
 
 		// Znaleziony wierzcho³ek przenosimy do S
@@ -133,7 +132,7 @@ int main()
 
 		// Modyfikujemy odpowiednio wszystkich s¹siadów u, którzy s¹ w Q
 		for (pw = graf[u]; pw; pw = pw->next){
-			if (!QS[pw->v] && (d[pw->v] > d[u] + pw->w)){ // Druga opcja to porównanie wag
+			if (!QS[pw->v] && (d[pw->v] < d[u] + pw->w)){ // Druga opcja to porównanie wag
 				d[pw->v] = d[u] + pw->v;
 				p[pw->v] = u;
 			}
