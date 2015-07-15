@@ -44,7 +44,7 @@ int main()
 	QS = new bool[ilosc_wierzcholkow];
 	graf = new element_listy *[ilosc_wierzcholkow];
 	S = new int[ilosc_wierzcholkow];
-	
+
 	//Inicjacja tablic dynamicznych
 	for (i = 0; i < ilosc_wierzcholkow; i++){
 		d[i] = MININT;
@@ -65,7 +65,7 @@ int main()
 			graf[i] = pw;
 		}
 	}
-	
+
 	////wyswietlanie - OK!
 	//for (i = 0; i < ilosc_wierzcholkow; ++i){
 	//	pw = graf[i];
@@ -95,7 +95,7 @@ int main()
 		// Modyfikujemy odpowiednio wszystkich s¹siadów u, którzy s¹ w Q
 		for (pw = graf[u]; pw; pw = pw->next){
 			if (!QS[pw->v] && (d[pw->v] < d[u] + pw->w)){ // Druga opcja to porównanie wag
-				d[pw->v] = d[u] + pw->v;
+				d[pw->v] = d[u] + pw->w;
 				p[pw->v] = u;
 			}
 		}
@@ -103,22 +103,29 @@ int main()
 
 	// Gotowe, wyœwietlamy wyniki
 
+	//for (i = 0; i < ilosc_wierzcholkow; i++)
+	//{
+	//	cout << i << ": ";
+
+	//	// Œcie¿kê przechodzimy od koñca ku pocz¹tkowi,
+	//	// Zapisuj¹c na stosie kolejne wierzcho³ki
+
+	//	for (j = i; j > -1; j = p[j]) S[sptr++] = j;
+
+	//	// Wyœwietlamy œcie¿kê, pobieraj¹c wierzcho³ki ze stosu
+
+	//	while (sptr) cout << S[--sptr] << " ";
+
+	//	// Na koñcu œcie¿ki wypisujemy jej koszt
+
+	//	cout << "$" << d[i] << endl;
+	//}
+
 	for (i = 0; i < ilosc_wierzcholkow; i++)
 	{
-		cout << i << ": ";
-
-		// Œcie¿kê przechodzimy od koñca ku pocz¹tkowi,
-		// Zapisuj¹c na stosie kolejne wierzcho³ki
-
-		for (j = i; j > -1; j = p[j]) S[sptr++] = j;
-
-		// Wyœwietlamy œcie¿kê, pobieraj¹c wierzcho³ki ze stosu
-
-		while (sptr) cout << S[--sptr] << " ";
-
-		// Na koñcu œcie¿ki wypisujemy jej koszt
-
-		cout << "$" << d[i] << endl;
+		if (d[i] > d[i + 1]){
+			cout << d[i];
+		}
 	}
 
 	// Usuwamy tablice dynamiczne
@@ -143,4 +150,3 @@ int main()
 
 	return 0;
 }
-
