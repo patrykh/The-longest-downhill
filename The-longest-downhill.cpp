@@ -101,6 +101,26 @@ int main()
 		}
 	}
 
+	// Gotowe, wyœwietlamy wyniki
+
+	//for (i = 0; i < ilosc_wierzcholkow; i++)
+	//{
+	//	cout << i << ": ";
+
+	//	// Œcie¿kê przechodzimy od koñca ku pocz¹tkowi,
+	//	// Zapisuj¹c na stosie kolejne wierzcho³ki
+
+	//	for (j = i; j > -1; j = p[j]) S[sptr++] = j;
+
+	//	// Wyœwietlamy œcie¿kê, pobieraj¹c wierzcho³ki ze stosu
+
+	//	while (sptr) cout << S[--sptr] << " ";
+
+	//	// Na koñcu œcie¿ki wypisujemy jej koszt
+
+	//	cout << "$" << d[i] << endl;
+	//}
+
 	for (i = 0; i < ilosc_wierzcholkow; i++)
 	{
 		if (d[i] > d[i + 1]){
