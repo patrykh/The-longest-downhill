@@ -44,15 +44,17 @@ void usun(element_listy **poczatek)
 
 int main()
 {
+	const int MININT = -2147483647;
 	int ilosc_wierzcholkow = 0,
 		start = 0,
 		ilosc_sasiadow = 0,
 		sasiad = 0,
 		waga = 0,
-		droga = 0,
 		j = 0,
 		w = 0,
-		i = 0;
+		i = 0,
+		u = 0,
+		*droga;
 	bool *visited;
 
 	element_listy **lista_sasiedztwa;
@@ -63,11 +65,12 @@ int main()
 
 	visited = new bool[ilosc_wierzcholkow];
 	lista_sasiedztwa = new element_listy *[ilosc_wierzcholkow];
-
+	droga = new int[ilosc_wierzcholkow];
 	//Inicjacja tablic dynamicznych
 	for (i = 0; i < ilosc_wierzcholkow; i++){
 		visited[i] = false;
 		lista_sasiedztwa[i] = NULL;
+		droga[i] = MININT;
 	}
 
 	// Dane wejœciowe
@@ -84,20 +87,20 @@ int main()
 	}
 
 	//wyswietlanie - OK!
-
-	//for (i = 0; i < ilosc_wierzcholkow; ++i){
-	//	pw = lista_sasiedztwa[i];
-	//	cout << i << ' ';
-	//	while (pw){
-	//		cout << pw->v;
-	//		cout << ' ';
-	//		cout << pw->w;
-	//		pw = pw->next;
-	//		cout << ' ';
-	//	}
-	//	cout << endl;
-	//}
-
+	cout << "Lista sasiedztwa" << endl;
+	for (i = 0; i < ilosc_wierzcholkow; ++i){
+		pw = lista_sasiedztwa[i];
+		cout << i << ' ';
+		while (pw){
+			cout << pw->v;
+			cout << ' ';
+			cout << pw->w;
+			pw = pw->next;
+			cout << ' ';
+		}
+		cout << endl;
+	}
+	cout <<  "Koniec listy s¹siedztwa" << endl;
 	//BFS
 
 	Q = new element_listy;
@@ -105,34 +108,46 @@ int main()
 	Q->v = start;
 	head = tail = Q;
 
-	visited[start] = true;
+	//visited[start] = true;
+
+	droga[start] = 0;
 
 	while (head){
 		w = head->v;
 
+		// Usuwanie g³owy
 		Q = head;
 		head = head->next;
 		if (!head) tail = NULL;
 		delete Q;
 
 		cout << w << ' ';
-
 		for (pw = lista_sasiedztwa[w]; pw; pw = pw->next){
+
 			Q = new element_listy;
 			Q->next = NULL;
 			Q->v = pw->v;
-
+			if (droga[pw->v] < droga[w] + pw->w){
+				droga[pw->v] = droga[w] + pw->w;
+			}
 			if (!tail){
 				head = Q;
-			}else{
+			}
+			else{
 				tail->next = Q;
 			}
 			tail = Q;
-			visited[pw->v] = true;
+			//visited[pw->v] = true;
 		}
 	}
 
-
+	for (i = 0; i < ilosc_wierzcholkow; i++)
+	{
+		if (droga[i] > droga[i + 1]){
+			cout << '\n' << droga[i];
+			break;
+		}
+	}
 
 	// Usuwamy tablice dynamiczne
 	for (i = 0; i < ilosc_wierzcholkow; i++)
