@@ -11,36 +11,17 @@
 
 using namespace std;
 
-struct element_listy
+struct el_slist
 {
-	element_listy * next;
+	el_slist * next;
 	int v, w;
 };
 
-void dodaj(int dana, element_listy ** koniec)
+struct el_dlist
 {
-	element_listy * newElement = new element_listy;
-	newElement->v = dana;
-	(*koniec)->next = newElement;
-	(*koniec) = newElement;
-}
-
-void pobierz(element_listy ** koniec)
-{
-	element_listy * tmp = *koniec;
-	cout << "\n" << tmp->v << "\n";
-}
-
-void usun(element_listy **poczatek)
-{
-
-	element_listy * tmp = *poczatek;
-	*poczatek = (*poczatek)->next;
-
-	cout << (*poczatek)->v << "\n";
-
-	delete tmp;
-}
+	el_dlist *prev,*next;
+	int v, w;
+};
 
 int main()
 {
@@ -54,23 +35,24 @@ int main()
 		w = 0,
 		i = 0,
 		u = 0,
+		*Vind,
 		*droga;
-	bool *visited;
+	bool test;
 
-	element_listy **lista_sasiedztwa;
-	element_listy *pw, *rw;
-	element_listy *Q, *head, *tail;
+	el_slist **graf, *ps, *rs;
+	el_dlist *L, *pd, *rd;
 
 	cin >> ilosc_wierzcholkow >> start;
-
-	visited = new bool[ilosc_wierzcholkow];
-	lista_sasiedztwa = new element_listy *[ilosc_wierzcholkow];
-	droga = new int[ilosc_wierzcholkow];
+	
 	//Inicjacja tablic dynamicznych
+	graf = new el_slist *[ilosc_wierzcholkow];
+	droga = new int[ilosc_wierzcholkow];
+	Vind = new int[ilosc_wierzcholkow];
+
 	for (i = 0; i < ilosc_wierzcholkow; i++){
-		visited[i] = false;
-		lista_sasiedztwa[i] = NULL;
+		graf[i] = NULL;
 		droga[i] = MININT;
+		Vind = 0;
 	}
 
 	// Dane wejœciowe
@@ -78,91 +60,99 @@ int main()
 		cin >> ilosc_sasiadow;
 		for (j = 0; j < ilosc_sasiadow; j++){
 			cin >> sasiad >> waga;
-			pw = new element_listy;
-			pw->v = sasiad;
-			pw->w = waga;
-			pw->next = lista_sasiedztwa[i];
-			lista_sasiedztwa[i] = pw;
+			ps = new el_slist;
+			ps->v = sasiad;
+			ps->w = waga;
+			ps->next = graf[i];
+			graf[i] = ps;
 		}
 	}
 
 	//wyswietlanie - OK!
-	cout << "Lista sasiedztwa" << endl;
-	for (i = 0; i < ilosc_wierzcholkow; ++i){
-		pw = lista_sasiedztwa[i];
-		cout << i << ' ';
-		while (pw){
-			cout << pw->v;
-			cout << ' ';
-			cout << pw->w;
-			pw = pw->next;
-			cout << ' ';
-		}
-		cout << endl;
+	//cout << "Lista sasiedztwa" << endl;
+	//for (i = 0; i < ilosc_wierzcholkow; ++i){
+	//	ps = graf[i];
+	//	cout << i << ' ';
+	//	while (ps){
+	//		cout << ps->v;
+	//		cout << ' ';
+	//		cout << ps->w;
+	//		ps = ps->next;
+	//		cout << ' ';
+	//	}
+	//	cout << endl;
+	//}
+	//cout <<  "Koniec listy s¹siedztwa" << endl;
+	//
+
+	
+	
+
+	L = NULL;
+
+	for (i = ilosc_wierzcholkow - 1; i >= 0; i--){
+		pd = new el_dlist;
+		pd->v = i;
+		pd->next = L;
+		if (pd->next) pd->next->prev = pd;
+		pd->prev = NULL;
+		L = pd;
 	}
-	cout <<  "Koniec listy s¹siedztwa" << endl;
-	//BFS
 
-	Q = new element_listy;
-	Q->next = NULL;
-	Q->v = start;
-	head = tail = Q;
+	do{
+		test = false;
 
-	//visited[start] = true;
-
-	droga[start] = 0;
-
-	while (head){
-		w = head->v;
-
-		// Usuwanie g³owy
-		Q = head;
-		head = head->next;
-		if (!head) tail = NULL;
-		delete Q;
-
-		cout << w << ' ';
-		for (pw = lista_sasiedztwa[w]; pw; pw = pw->next){
-
-			Q = new element_listy;
-			Q->next = NULL;
-			Q->v = pw->v;
-			if (droga[pw->v] < droga[w] + pw->w){
-				droga[pw->v] = droga[w] + pw->w;
-			}
-			if (!tail){
-				head = Q;
+		pd = L;
+		while (pd){
+			if (Vind[pd->v]){
+				pd = pd->next;
 			}
 			else{
-				tail->next = Q;
-			}
-			tail = Q;
-			//visited[pw->v] = true;
-		}
-	}
+				test = true;
+				for (ps = graf[pd->v]; ps; ps = ps->next){
+					Vind[ps->v]--;
+				}
+				cout << pd->v << " ";
+				rd = pd;
+				pd = pd->next;
 
-	for (i = 0; i < ilosc_wierzcholkow; i++)
-	{
-		if (droga[i] > droga[i + 1]){
-			cout << '\n' << droga[i];
-			break;
+				if (rd->next){
+					rd->next->prev = rd->prev;
+				}
+				if (rd->prev){
+					rd->prev->next = rd->next;
+				}
+				else{
+					L = pd;
+					delete rd;
+				}
+			}
 		}
-	}
+	} while (test);
+
+	cout << endl << endl;
 
 	// Usuwamy tablice dynamiczne
 	for (i = 0; i < ilosc_wierzcholkow; i++)
 	{
-		pw = lista_sasiedztwa[i];
-		while (pw)
+		ps = graf[i];
+		while (ps)
 		{
-			rw = pw;
-			pw = pw->next;
-			delete rw;
+			rs = ps;
+			ps = ps->next;
+			delete rs;
 		}
 	}
+	delete[] graf;
 
-	delete[] lista_sasiedztwa;
-	delete[] visited;
+	pd = L;
+	while (pd)
+	{
+		rd = pd;
+		pd = pd->next;
+		delete rd;
+	}
+	
 
 	return 0;
 }
