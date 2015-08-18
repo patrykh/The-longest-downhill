@@ -17,12 +17,6 @@ struct el_slist
 	int v, w;
 };
 
-struct el_dlist
-{
-	el_dlist *prev,*next;
-	int v, w;
-};
-
 int main()
 {
 	const int MININT = -2147483647;
@@ -35,25 +29,24 @@ int main()
 		w = 0,
 		i = 0,
 		u = 0,
-		*Vind,
-		*droga;
-	bool test;
+		*droga,
+		*poprzednik;
 
 	el_slist **graf, *ps, *rs;
-	el_dlist *L, *pd, *rd;
 
 	cin >> ilosc_wierzcholkow >> start;
 	
 	//Inicjacja tablic dynamicznych
 	graf = new el_slist *[ilosc_wierzcholkow];
 	droga = new int[ilosc_wierzcholkow];
-	Vind = new int[ilosc_wierzcholkow];
+	poprzednik = new int[ilosc_wierzcholkow];
 
 	for (i = 0; i < ilosc_wierzcholkow; i++){
 		graf[i] = NULL;
 		droga[i] = MININT;
-		Vind = 0;
+		poprzednik[i] = -1;
 	}
+
 
 	// Dane wejœciowe
 	for (i = 0; i < ilosc_wierzcholkow; i++){
@@ -69,69 +62,66 @@ int main()
 	}
 
 	//wyswietlanie - OK!
-	//cout << "Lista sasiedztwa" << endl;
-	//for (i = 0; i < ilosc_wierzcholkow; ++i){
-	//	ps = graf[i];
-	//	cout << i << ' ';
-	//	while (ps){
-	//		cout << ps->v;
-	//		cout << ' ';
-	//		cout << ps->w;
-	//		ps = ps->next;
-	//		cout << ' ';
-	//	}
-	//	cout << endl;
-	//}
-	//cout <<  "Koniec listy s¹siedztwa" << endl;
-	//
-
-	
-	
-
-	L = NULL;
-
-	for (i = ilosc_wierzcholkow - 1; i >= 0; i--){
-		pd = new el_dlist;
-		pd->v = i;
-		pd->next = L;
-		if (pd->next) pd->next->prev = pd;
-		pd->prev = NULL;
-		L = pd;
-	}
-
-	do{
-		test = false;
-
-		pd = L;
-		while (pd){
-			if (Vind[pd->v]){
-				pd = pd->next;
-			}
-			else{
-				test = true;
-				for (ps = graf[pd->v]; ps; ps = ps->next){
-					Vind[ps->v]--;
-				}
-				cout << pd->v << " ";
-				rd = pd;
-				pd = pd->next;
-
-				if (rd->next){
-					rd->next->prev = rd->prev;
-				}
-				if (rd->prev){
-					rd->prev->next = rd->next;
-				}
-				else{
-					L = pd;
-					delete rd;
-				}
-			}
+	/*cout << "Lista sasiedztwa" << endl;
+	for (i = 0; i < ilosc_wierzcholkow; ++i){
+		ps = graf[i];
+		cout << i << ' ';
+		while (ps){
+			cout << ps->v;
+			cout << ' ';
+			cout << ps->w;
+			ps = ps->next;
+			cout << ' ';
 		}
-	} while (test);
+		cout << endl;
+	}
+	cout <<  "Koniec listy s¹siedztwa" << endl;
+	*/
 
-	cout << endl << endl;
+	
+	droga[start] = 0;
 
+	//BFS
+	el_slist *p, *q, *glowa, *ogon;
+
+	q = new el_slist;
+	q->next = NULL;
+	q->v = start;
+	glowa = ogon = q;
+
+	while (glowa){
+		start = glowa->v;
+
+		q = glowa;
+		glowa = glowa->next;
+		if (!glowa) ogon = NULL;
+		delete q;
+
+		for (p = graf[start]; p; p = p->next){
+			q = new el_slist;
+			q->next = NULL;
+			q->v = p->v;
+			if (!ogon){
+				glowa = q;
+			}
+			else
+			{
+				ogon->next = q;
+			}
+			ogon = q;
+
+			//TUTAJ DOPISAC TABLICE DROGI I POPRZEDNIKÓW
+			//if (droga[p->v] < )
+			poprzednik[p->v] = start;
+			droga[p->v] = droga[start] + (p->w);
+		}
+	}
+	cout << "\n";
+	for (i = 0; i < ilosc_wierzcholkow; i++){
+		//cout << poprzednik[i];
+		cout << droga[i] << endl;
+	}
+		
 	// Usuwamy tablice dynamiczne
 	for (i = 0; i < ilosc_wierzcholkow; i++)
 	{
@@ -143,17 +133,7 @@ int main()
 			delete rs;
 		}
 	}
-	delete[] graf;
-
-	pd = L;
-	while (pd)
-	{
-		rd = pd;
-		pd = pd->next;
-		delete rd;
-	}
-	
+	delete[] graf;	
 
 	return 0;
 }
-
