@@ -1,12 +1,3 @@
-// The-longest-downhill.cpp : Defines the entry point for the console application.
-// Wczytywanie danych
-// OK - Iloœc wêz³ów <-- na tej podtawie pêtla for do wpisywania listy wez³ów
-// wêze³ startowy
-// lista wêz³ów
-// Graf skierowany, wa¿ony
-// Alg Dijkstry z wagami ujemnymi???
-
-//#include "stdafx.h"
 #include <iostream>
 
 using namespace std;
@@ -26,9 +17,8 @@ int main()
 		sasiad = 0,
 		waga = 0,
 		j = 0,
-		w = 0,
 		i = 0,
-		u = 0,
+
 		*droga,
 		*poprzednik;
 
@@ -101,6 +91,7 @@ int main()
 			q = new el_slist;
 			q->next = NULL;
 			q->v = p->v;
+			cout << q->v << " ";
 			if (!ogon){
 				glowa = q;
 			}
@@ -113,6 +104,7 @@ int main()
 			//TUTAJ DOPISAC TABLICE DROGI I POPRZEDNIKÓW
 			//if (droga[p->v] < )
 			poprzednik[p->v] = start;
+			if (droga[p->v] < droga[start] + (p->w))
 			droga[p->v] = droga[start] + (p->w);
 		}
 	}
